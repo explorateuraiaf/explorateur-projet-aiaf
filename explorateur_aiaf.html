@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorateur de Projet : AIAF</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #FDFBF6; color: #3C3633; }
+        .main-container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
+        .nav-item { cursor: pointer; padding: 0.75rem 1rem; border-radius: 0.375rem; transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out; }
+        .nav-item:hover, .nav-item.active { background-color: #E0E0E0; color: #776B5D; }
+        .nav-item.active { font-weight: 600; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .card { background-color: #FFFBF0; border: 1px solid #E0E0E0; border-radius: 0.5rem; padding: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .card-title { font-size: 1.25rem; font-weight: 600; color: #776B5D; margin-bottom: 1rem; }
+        .button-primary { background-color: #B0A695; color: #FFFFFF; padding: 0.5rem 1rem; border-radius: 0.375rem; transition: background-color 0.2s; }
+        .button-primary:hover { background-color: #776B5D; }
+        .kpi-card { background-color: #F0EBE3; padding: 1rem; border-radius: 0.375rem; text-align: center; }
+        .kpi-value { font-size: 1.5rem; font-weight: bold; color: #776B5D; }
+        .kpi-label { font-size: 0.875rem; color: #3C3633; }
+        .details-toggle { cursor: pointer; color: #A0522D; text-decoration: underline; margin-top: 0.5rem; display: inline-block; }
+        .details-content { display: none; margin-top: 0.5rem; padding-left: 1rem; border-left: 2px solid #E0E0E0; }
+        h1, h2, h3 { color: #776B5D; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 300px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 350px; } }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #FDFBF6; }
+        ::-webkit-scrollbar-thumb { background: #E0E0E0; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #C0C0C0; }
+        .code-block { background-color: #2d2d2d; color: #f0f0f0; padding: 1rem; border-radius: 0.375rem; overflow-x: auto; font-family: 'Courier New', Courier, monospace; font-size: 0.875rem; white-space: pre; }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="main-container py-8">
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-bold mb-2">Explorateur de Projet : AIAF</h1>
+            <p class="text-lg text-gray-700">Synthèse Interactive du Plan de Projet "Agent IA Aléa Fractal"</p>
+        </header>
+
+        <div class="md:flex">
+            <aside class="w-full md:w-1/4 lg:w-1/5 p-4">
+                <nav id="mainNav" class="space-y-2">
+                    <a class="nav-item block" data-section="accueil">🏠 Accueil & Synthèse</a>
+                    <a class="nav-item block" data-section="vision">🎯 Vision & Objectifs</a>
+                    <a class="nav-item block" data-section="architecture">🏗️ Architecture & Conception</a>
+                    <a class="nav-item block" data-section="modules">🧩 Modules Clés</a>
+                    <a class="nav-item block" data-section="processus">⚙️ Processus Projet</a>
+                    <a class="nav-item block" data-section="feuilleDeRoute">🗺️ Feuille de Route & Risques</a>
+                </nav>
+            </aside>
+
+            <main class="w-full md:w-3/4 lg:w-4/5 p-4">
+                <section id="accueil" class="content-section">
+                    <h2 class="text-3xl font-semibold mb-6">Bienvenue dans l'Explorateur du Projet AIAF</h2>
+                    <p class="mb-6 text-gray-700">
+                        Cette application interactive présente une synthèse du plan de projet pour le "GPT Explorateur ABACABA" et son composant central, l'"Agent IA Aléa Fractal" (AIAF). L'AIAF est conçu comme un laboratoire mathématico-algorithmique pour la modélisation fractale, la simulation probabiliste, et l'analyse structurée de séquences. Explorez les différentes sections pour comprendre la vision, l'architecture, les modules, le plan de développement et la feuille de route de ce projet innovant.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                        <div class="kpi-card">
+                            <div class="kpi-value">7 Phases</div>
+                            <div class="kpi-label">Planification Initiale à Long Terme</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value">MVP en ~7 Mois</div>
+                            <div class="kpi-label">Objectif de Développement Initial</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value">Python</div>
+                            <div class="kpi-label">Langage Principal</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Objectif Principal du Projet</h3>
+                        <p class="text-gray-700">Créer un outil interactif pour l'exploration descriptive de régularités (via motifs ABACABA et symbolisation), la génération créative contrôlée de séquences aléato-fractales, et la recherche, en soulignant son caractère non prédictif pour les systèmes aléatoires réels.</p>
+                    </div>
+                </section>
+
+                <section id="vision" class="content-section">
+                    <h2 class="text-3xl font-semibold mb-6">🎯 Vision & Objectifs du Projet</h2>
+                    <p class="mb-6 text-gray-700">Cette section détaille la vision fondatrice du projet AIAF, sa mission, les objectifs SMART pour le Produit Minimum Viable (MVP), et le périmètre précis de cette première version. Ces éléments constituent la charte du projet et guident son développement.</p>
+                    
+                    <div class="card mb-6">
+                        <h3 class="card-title">Charte de Projet AIAF (Synthèse)</h3>
+                        <p class="mb-2"><strong>Vision Globale :</strong> Créer un agent IA pionnier pour l'exploration et la génération de séquences combinant structures fractales (ABACABA) et caractéristiques probabilistes contrôlables et vérifiables.</p>
+                        <p class="mb-2"><strong>Mission :</strong> Fournir une source d'aléa fiable, permettre la modélisation fractale/symbolique, développer des capacités d'agent intelligent (génération), servir de laboratoire interactif, et catalyser la créativité/découverte.</p>
+                        <div class="mt-4">
+                            <span class="details-toggle" data-target="charter-details">Afficher les Objectifs SMART du MVP...</span>
+                            <div id="charter-details" class="details-content">
+                                <ul class="list-disc list-inside text-gray-700 space-y-1">
+                                    <li><strong>Fondation Aléa Validée (Mois 2):</strong> Module PRNG (PCG64) passant 3-5 tests statistiques de base.</li>
+                                    <li><strong>Détection Fractale ABACABA (Mois 4):</strong> Identification >95% motifs ABA/ABACABA exacts (Niv 1&2) sur jeux de test.</li>
+                                    <li><strong>Symbolisation Dynamique (Mois 3):</strong> Conversion numérique-symbolique avec 3 méthodes configurables.</li>
+                                    <li><strong>Génération Guidée NIP (Mois 6):</strong> Séquences avec motif ABACABA (Niv 1/2) et probas symboles respectées.</li>
+                                    <li><strong>Intégration & UI MVP (Mois 7):</strong> Modules intégrés, UI de base pour 2 scénarios utilisateurs clés.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">Périmètre du MVP</h3>
+                        <p class="mb-2 text-gray-700">Le MVP se concentre sur les fonctionnalités essentielles pour valider le concept de base de l'AIAF.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <h4 class="font-semibold text-green-700 mb-1">Essentiel (Must-Have)</h4>
+                                <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                    <li>Module Aléa (MAC) avec tests stats</li>
+                                    <li>Détection ABACABA exacte (Niv 1 & 2)</li>
+                                    <li>Symbolisation (3 méthodes)</li>
+                                    <li>Génération NIP simple (ABA/ABACABA)</li>
+                                    <li>UI de base pour config/lancement/visu</li>
+                                    <li>Gestion configs (JSON)</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-yellow-700 mb-1">Souhaitable (Should-Have)</h4>
+                                <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                    <li>Plus de tests statistiques (MAC)</li>
+                                    <li>Visualisations plus riches</li>
+                                    <li>Export résultats</li>
+                                    <li>Documentation utilisateur basique</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-red-700 mb-1">Exclu (Won't-Have)</h4>
+                                <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                    <li>Algorithme ABACODE (apprentissage)</li>
+                                    <li>Fusion ABACABA-Fibonacci</li>
+                                    <li>Analyse de similarité (AFA)</li>
+                                    <li>IA complexe (Deep Learning)</li>
+                                    <li>Déploiement serveur/multi-utilisateur</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="architecture" class="content-section">
+                    <h2 class="text-3xl font-semibold mb-6">🏗️ Architecture & Conception</h2>
+                    <p class="mb-6 text-gray-700">Cette section décrit l'architecture globale du système "GPT Explorateur ABACABA", l'architecture interne de l'AIAF, le modèle de données et de configuration, ainsi que les choix technologiques qui sous-tendent le projet.</p>
+                    
+                    <div class="card mb-6">
+                        <h3 class="card-title">Architecture Système Globale (Desktop MVP)</h3>
+                        <p class="mb-2 text-gray-700">Une application modulaire en Python, organisée autour d'un contrôleur principal qui orchestre les interactions entre l'UI et les modules fonctionnels.</p>
+                        <span class="details-toggle" data-target="system-components-details">Afficher les composants principaux...</span>
+                        <div id="system-components-details" class="details-content">
+                            <ul class="list-disc list-inside text-gray-700 space-y-1">
+                                <li><strong>Interface Utilisateur (UI):</strong> Interaction homme-machine (PyQt6/PySide6 suggéré).</li>
+                                <li><strong>Contrôleur Principal (MainController):</strong> Orchestrateur central.</li>
+                                <li><strong>GestionnaireSessionProjet (SessionManager):</strong> État de la session.</li>
+                                <li><strong>AIAF_Engine:</strong> Cœur logique (MAC, MSD, AFA, NIP).</li>
+                                <li><strong>MoteurSimulationMonteCarlo (MSMC):</strong> Pour simulations (si implémenté).</li>
+                                <li><strong>ModuleAccesDonnees (MAD):</strong> Lecture/écriture fichiers (JSON, CSV, TXT).</li>
+                                <li><strong>ModuleVisualisation (MV):</strong> Formatage données pour affichage (Matplotlib/Seaborn).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card mb-6">
+                        <h3 class="card-title">Architecture Interne de l'AIAF_Engine</h3>
+                        <p class="mb-2 text-gray-700">L'AIAF_Engine est lui-même composé de sous-modules spécialisés :</p>
+                        <span class="details-toggle" data-target="aiaf-modules-details">Afficher les sous-modules de l'AIAF...</span>
+                        <div id="aiaf-modules-details" class="details-content">
+                            <ul class="list-disc list-inside text-gray-700 space-y-1">
+                                <li><strong>Moteur d'Aléa Certifiable (MAC):</strong> Génération PRNG (Xoshiro256++/PCG64) et tests statistiques (Chi2, Runs, etc.).</li>
+                                <li><strong>Moteur de Symbolisation Dynamique (MSD):</strong> Transformation numérique -> symbolique (seuils, quantiles, delta).</li>
+                                <li><strong>Analyseur Fractal ABACABA (AFA):</strong> Détection de motifs ABACABA exacts (Niv 1&2 pour MVP).</li>
+                                <li><strong>Noyau IA Probabiliste (NIP):</strong> Génération de séquences aléato-fractales (Constructeur Guidé par Modèle Fractal Stochastique pour MVP).</li>
+                                <li><strong>Gestionnaire de Configuration AIAF (AIAF_ConfigManager):</strong> Gestion centralisée des paramètres des modules AIAF.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">Modèle de Données & Configurations (JSON)</h3>
+                        <p class="mb-2 text-gray-700">Les configurations, séquences et résultats sont principalement gérés via des fichiers JSON pour la flexibilité et la lisibilité.</p>
+                        <span class="details-toggle" data-target="data-model-details">Afficher les structures de données principales...</span>
+                        <div id="data-model-details" class="details-content">
+                            <ul class="list-disc list-inside text-gray-700 space-y-1">
+                                <li><strong>Configurations AIAF (`aiaf_config.json`):</strong> Paramètres pour MAC, AFA, NIP.</li>
+                                <li><strong>Profils de Symbolisation (`*.symp_profile.json`):</strong> Règles pour MSD (méthode, paramètres).</li>
+                                <li><strong>Séquences:</strong> Numériques (listes de nombres, CSV/TXT), Symboliques (listes de chaînes).</li>
+                                <li><strong>Résultats (`*.aiaf_run.json`):</strong> Snapshot des paramètres, séquences traitées, résultats d'analyse/génération.</li>
+                                <li><strong>Projet (`*.abacaba_proj.json`):</strong> État de la session de travail, liens vers fichiers actifs.</li>
+                            </ul>
+                            <p class="mt-2 text-sm">Exemple de structure pour `NIP_config` (partie de `aiaf_config.json`):</p>
+                            <div class="code-block">
+{
+  "defaultGenerationMode": "fractal_stochastic",
+  "defaultTargetPattern": { "type": "ABACABA", "level": 2 },
+  "defaultSequenceLength": 100,
+  "defaultSymbolProbabilities": { "A": 0.4, "B": 0.35, "C": 0.25 }
+}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="modules" class="content-section">
+                    <h2 class="text-3xl font-semibold mb-6">🧩 Modules Clés de l'AIAF</h2>
+                    <p class="mb-6 text-gray-700">Un aperçu des modules fondamentaux qui composent l'Agent IA Aléa Fractal (AIAF). Chaque module a des responsabilités spécifiques et interagit avec les autres pour fournir les fonctionnalités de l'explorateur.</p>
+                    <div id="module-details-container" class="space-y-4">
+                        </div>
+                </section>
+
+                <section id="processus" class="content-section">
+                    <h2 class="text-3xl font-semibold mb-6">⚙️ Processus Projet & Développement</h2>
+                    <p class="mb-6 text-gray-700">Cette section couvre le macro-planning du projet, la stratégie d'intégration des modules, les plans de test, de documentation et de déploiement pour le MVP.</p>
+                    <div class="card mb-6">
+                        <h3 class="card-title">Macro-Planning du MVP (~7 Mois)</h3>
+                        <div class="chart-container relative h-[300px] md:h-[350px] w-full max-w-2xl mx-auto">
+                             <canvas id="projectTimelineChart"></canvas>
+                        </div>
+                        <span class="details-toggle mt-4" data-target="timeline-details">Afficher les détails des phases...</span>
+                        <div id="timeline-details" class="details-content">
+                            </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="card">
+                            <h3 class="card-title">Stratégie d'Intégration</h3>
+                            <p class="text-sm text-gray-700">Approche incrémentale et séquentielle par couches, avec tests à chaque étape majeure, d'abord pour les modules internes de l'AIAF, puis pour l'intégration de l'AIAF dans l'application principale.</p>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Stratégie de Test</h3>
+                            <p class="text-sm text-gray-700">Combinaison de tests unitaires (Pytest), d'intégration, de performance (basique), et de validation fonctionnelle (scénarios utilisateurs) pour assurer la qualité et la robustesse du MVP.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="feuilleDeRoute" class="content-section">
+                    <h2 class="text-3xl font-semibold mb-6">🗺️ Feuille de Route Post-MVP & Gestion des Risques</h2>
+                    <p class="mb-6 text-gray-700">Au-delà du MVP, le projet AIAF a un potentiel d'évolution important. Cette section esquisse les pistes futures et les risques identifiés avec leurs stratégies d'atténuation.</p>
+                    <div class="card mb-6">
+                        <h3 class="card-title">Fonctionnalités Post-MVP Envisagées (6-12 Mois)</h3>
+                        <ul id="postMvpFeatures" class="list-disc list-inside text-gray-700 space-y-1">
+                            <li><strong>Algorithme "ABACODE":</strong> Auto-régulation descriptive pour l'AIAF.</li>
+                            <li><strong>Gestion de Similarité (AFA):</strong> Détection de motifs fractals non exacts.</li>
+                            <li><strong>Extension des Modèles NIP:</strong> Combinaisons de motifs, fusion ABACABA-Fibonacci.</li>
+                            <li><strong>Certification MAC Poussée:</strong> Intégration de tests statistiques plus rigoureux.</li>
+                            <li><strong>Détection ABACABA Niveaux Supérieurs (AFA):</strong> Analyse de structures récursives plus profondes.</li>
+                        </ul>
+                    </div>
+                     <div class="card">
+                        <h3 class="card-title">Principaux Risques Identifiés et Stratégies d'Atténuation</h3>
+                        <div id="risk-management-container" class="space-y-3">
+                           </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <footer class="mt-12 pt-8 border-t border-gray-300 text-center">
+            <p class="text-sm text-gray-600">&copy; 2025 Projet GPT Explorateur ABACABA & AIAF. Application conceptuelle générée par IA.</p>
+            <p class="text-xs text-gray-500">Date de génération : <span id="generationDate"></span>.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Données du "Rapport Source" (notre conversation)
+        const projectData = {
+            appName: "GPT Explorateur ABACABA & AIAF",
+            currentDate: "20 mai 2025",
+            mvpDurationMonths: 7,
+            synthesis: {
+                kpis: [
+                    { value: "7 Phases", label: "Planification Initiale à Long Terme" },
+                    { value: "MVP en ~7 Mois", label: "Objectif de Développement Initial" },
+                    { value: "Python", label: "Langage Principal" },
+                ],
+                mainObjective: "Créer un outil interactif pour l'exploration descriptive de régularités (via motifs ABACABA et symbolisation), la génération créative contrôlée de séquences aléato-fractales, et la recherche, en soulignant son caractère non prédictif pour les systèmes aléatoires réels."
+            },
+            visionAndObjectives: {
+                charter: {
+                    vision: "Créer un agent IA pionnier pour l'exploration et la génération de séquences combinant structures fractales (ABACABA) et caractéristiques probabilistes contrôlables et vérifiables.",
+                    mission: "Fournir une source d'aléa fiable, permettre la modélisation fractale/symbolique, développer des capacités d'agent intelligent (génération), servir de laboratoire interactif, et catalyser la créativité/découverte.",
+                    smartMvp: [
+                        "Fondation Aléa Validée (Mois 2): Module PRNG (PCG64) passant 3-5 tests statistiques de base.",
+                        "Détection Fractale ABACABA (Mois 4): Identification >95% motifs ABA/ABACABA exacts (Niv 1&2) sur jeux de test.",
+                        "Symbolisation Dynamique (Mois 3): Conversion numérique-symbolique avec 3 méthodes configurables.",
+                        "Génération Guidée NIP (Mois 6): Séquences avec motif ABACABA (Niv 1/2) et probas symboles respectées.",
+                        "Intégration & UI MVP (Mois 7): Modules intégrés, UI de base pour 2 scénarios utilisateurs clés."
+                    ]
+                },
+                mvpScope: {
+                    mustHave: ["Module Aléa (MAC) avec tests stats", "Détection ABACABA exacte (Niv 1 & 2)", "Symbolisation (3 méthodes)", "Génération NIP simple (ABA/ABACABA)", "UI de base pour config/lancement/visu", "Gestion configs (JSON)"],
+                    shouldHave: ["Plus de tests statistiques (MAC)", "Visualisations plus riches", "Export résultats", "Documentation utilisateur basique"],
+                    wontHave: ["Algorithme ABACODE (apprentissage)", "Fusion ABACABA-Fibonacci", "Analyse de similarité (AFA)", "IA complexe (Deep Learning)", "Déploiement serveur/multi-utilisateur"]
+                }
+            },
+            architecture: {
+                systemGlobal: "Une application modulaire en Python (Desktop MVP), organisée autour d'un contrôleur principal qui orchestre les interactions entre l'UI et les modules fonctionnels.",
+                systemComponents: ["Interface Utilisateur (UI): Interaction homme-machine (PyQt6/PySide6 suggéré).", "Contrôleur Principal (MainController): Orchestrateur central.", "GestionnaireSessionProjet (SessionManager): État de la session.", "AIAF_Engine: Cœur logique (MAC, MSD, AFA, NIP).", "MoteurSimulationMonteCarlo (MSMC): Pour simulations (si implémenté).", "ModuleAccesDonnees (MAD): Lecture/écriture fichiers (JSON, CSV, TXT).", "ModuleVisualisation (MV): Formatage données pour affichage (Matplotlib/Seaborn)."],
+                aiafInternal: "L'AIAF_Engine est composé de sous-modules spécialisés : MAC (Moteur d'Aléa Certifiable), MSD (Moteur de Symbolisation Dynamique), AFA (Analyseur Fractal ABACABA), NIP (Noyau IA Probabiliste), et AIAF_ConfigManager.",
+                aiafSubModules: [
+                    { name: "Moteur d'Aléa Certifiable (MAC)", description: "Génération PRNG (Xoshiro256++/PCG64) et tests statistiques (Chi2, Runs, etc.)." },
+                    { name: "Moteur de Symbolisation Dynamique (MSD)", description: "Transformation numérique -> symbolique (seuils, quantiles, delta)." },
+                    { name: "Analyseur Fractal ABACABA (AFA)", description: "Détection de motifs ABACABA exacts (Niv 1&2 pour MVP)." },
+                    { name: "Noyau IA Probabiliste (NIP)", description: "Génération de séquences aléato-fractales (Constructeur Guidé par Modèle Fractal Stochastique pour MVP)." },
+                    { name: "Gestionnaire de Configuration AIAF (AIAF_ConfigManager)", description: "Gestion centralisée des paramètres des modules AIAF." }
+                ],
+                dataModel: {
+                    summary: "Les configurations, séquences et résultats sont principalement gérés via des fichiers JSON pour la flexibilité et la lisibilité.",
+                    structures: ["Configurations AIAF (`aiaf_config.json`): Paramètres pour MAC, AFA, NIP.", "Profils de Symbolisation (`*.symp_profile.json`): Règles pour MSD.", "Séquences: Numériques (listes de nombres, CSV/TXT), Symboliques (listes de chaînes).", "Résultats (`*.aiaf_run.json`): Snapshot des paramètres, séquences traitées, résultats d'analyse/génération.", "Projet (`*.abacaba_proj.json`): État de la session de travail, liens vers fichiers actifs."],
+                    exampleNipConfig: `{
+  "defaultGenerationMode": "fractal_stochastic",
+  "defaultTargetPattern": { "type": "ABACABA", "level": 2 },
+  "defaultSequenceLength": 100,
+  "defaultSymbolProbabilities": { "A": 0.4, "B": 0.35, "C": 0.25 }
+}`
+                }
+            },
+            keyModules: [ // Données pour la section "Modules Clés"
+                { name: "Moteur d'Aléa Certifiable (MAC)", responsibility: "Fournir un aléa de haute qualité testé.", algorithms: "PRNG (PCG64/Xoshiro256++), Tests Statistiques (Fréquence, Séries, Chi-carré).", devPlanPrompt: "Prompt 2.1" },
+                { name: "Moteur de Symbolisation Dynamique (MSD)", responsibility: "Transformer séquences numériques en symboliques.", algorithms: "Méthodes par Seuils Fixes, Quantiles, Variation Delta.", devPlanPrompt: "Prompt 2.2" },
+                { name: "Analyseur Fractal ABACABA (AFA)", responsibility: "Détecter motifs ABACABA (Niv 1 & 2 exacts pour MVP).", algorithms: "Recherche de sous-chaînes exactes, approche récursive.", devPlanPrompt: "Prompt 2.3" },
+                { name: "Noyau IA Probabiliste (NIP)", responsibility: "Générer séquences aléato-fractales (structure + stochastique).", algorithms: "Constructeur de Séquence Guidé par Modèle Fractal Stochastique (CSG-MFS).", devPlanPrompt: "Prompts 3.1-3.4" }
+            ],
+            projectProcess: {
+                timeline: [ // en semaines
+                    { phase: "Phase 0: Planification", duration: 1, color: 'rgba(128, 100, 162, 0.7)' }, // Violet
+                    { phase: "Phase 1: Conception Archi.", duration: 3, color: 'rgba(85, 130, 162, 0.7)' },   // Bleu-gris
+                    { phase: "Phase 2: Dév. Modules Base", duration: 8, color: 'rgba(100, 162, 85, 0.7)' }, // Vert
+                    { phase: "Phase 3: Dév. NIP", duration: 6, color: 'rgba(162, 148, 85, 0.7)' },      // Olive
+                    { phase: "Phase 4: Intégration & UI", duration: 6, color: 'rgba(162, 115, 85, 0.7)' }, // Orange-brun
+                    { phase: "Phase 5: Tests & Validation", duration: 4, color: 'rgba(162, 85, 100, 0.7)' },  // Rouge-brun
+                    { phase: "Phase 6: Doc & Déploiement", duration: 2, color: 'rgba(140, 140, 140, 0.7)' } // Gris
+                ],
+                timelineDetails: [
+                    "<strong>Phase 0 (1 sem.):</strong> Définition, Planification Initiale (Charte, Périmètre MVP, KPIs, Macro-planning, Risques).",
+                    "<strong>Phase 1 (3 sem.):</strong> Conception et Architecture Détaillée (Système, AIAF interne, Modèle de Données, Choix Tech, APIs).",
+                    "<strong>Phase 2 (8 sem.):</strong> Développement des Modules de Base (MAC, MSD, AFA).",
+                    "<strong>Phase 3 (6 sem.):</strong> Développement du Noyau IA Probabiliste (NIP).",
+                    "<strong>Phase 4 (6 sem.):</strong> Intégration des Modules AIAF et Développement UI de Base.",
+                    "<strong>Phase 5 (4 sem.):</strong> Test et Validation Complète du MVP.",
+                    "<strong>Phase 6 (2 sem.):</strong> Documentation Finale et Déploiement du MVP."
+                ],
+                integrationStrategy: "Approche incrémentale et séquentielle par couches, avec tests à chaque étape majeure, d'abord pour les modules internes de l'AIAF, puis pour l'intégration de l'AIAF dans l'application principale.",
+                testingStrategy: "Combinaison de tests unitaires (Pytest), d'intégration, de performance (basique), et de validation fonctionnelle (scénarios utilisateurs) pour assurer la qualité et la robustesse du MVP."
+            },
+            roadmapAndRisks: {
+                postMvpFeatures: ["Algorithme \"ABACODE\": Auto-régulation descriptive pour l'AIAF.", "Gestion de Similarité (AFA): Détection de motifs fractals non exacts.", "Extension des Modèles NIP: Combinaisons de motifs, fusion ABACABA-Fibonacci.", "Certification MAC Poussée: Intégration de tests statistiques plus rigoureux.", "Détection ABACABA Niveaux Supérieurs (AFA): Analyse de structures récursives plus profondes."],
+                risks: [
+                    { name: "Complexité de l'Intégration des Modules", mitigation: "Conception d'Interfaces Claires (API driven), Intégration Continue, Développement Incrémental, Mocks/Stubs." },
+                    { name: "Performance Insuffisante des Algorithmes (Python)", mitigation: "Profilage Précoce, Optimisation Algorithmique, Utilisation de NumPy, (Post-MVP) Cython/Rust/Go pour sections critiques." },
+                    { name: "Subjectivité dans la Validation des Résultats du NIP", mitigation: "Critères d'Évaluation Clairs pour MVP (présence motif, respect probas), Tests avec Données Synthétiques, Feedback Utilisateur Qualitatif." },
+                    { name: "Disponibilité/Adéquation des Ressources Humaines", mitigation: "Évaluation réaliste des compétences, Priorisation, Documentation Rigoureuse, Partage des Connaissances." },
+                    { name: "Dérapage du Périmètre (Scope Creep) du MVP", mitigation: "Périmètre MVP Strict et Validé, Gestion Rigoureuse des Changements, Priorisation Continue du Backlog, Focus sur Valeur Minimale Viable." }
+                ]
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Date de génération
+            document.getElementById('generationDate').textContent = new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+
+            // Navigation
+            const navItems = document.querySelectorAll('#mainNav .nav-item');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            function showSection(sectionId) {
+                contentSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                const activeSection = document.getElementById(sectionId);
+                const activeNavItem = document.querySelector(`.nav-item[data-section="${sectionId}"]`);
+                
+                if (activeSection) activeSection.classList.add('active');
+                if (activeNavItem) activeNavItem.classList.add('active');
+            }
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    showSection(this.dataset.section);
+                });
+            });
+
+            // Afficher la section par défaut (Accueil)
+            showSection('accueil');
+
+            // Toggles pour détails
+            document.querySelectorAll('.details-toggle').forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const targetId = this.dataset.target;
+                    const targetContent = document.getElementById(targetId);
+                    if (targetContent) {
+                        const isVisible = targetContent.style.display === 'block';
+                        targetContent.style.display = isVisible ? 'none' : 'block';
+                        this.textContent = isVisible ? this.textContent.replace('Masquer', 'Afficher') : this.textContent.replace('Afficher', 'Masquer');
+                    }
+                });
+            });
+            
+            // Populate dynamic content
+            // Section Vision & Objectifs
+            const charterDetailsUl = document.querySelector('#charter-details ul');
+            if (charterDetailsUl) {
+                projectData.visionAndObjectives.charter.smartMvp.forEach(obj => {
+                    const li = document.createElement('li');
+                    li.textContent = obj;
+                    charterDetailsUl.appendChild(li);
+                });
+            }
+            
+            // Section Architecture - AIAF Modules
+            const aiafModulesDetailsUl = document.querySelector('#aiaf-modules-details ul');
+            if (aiafModulesDetailsUl) {
+                projectData.architecture.aiafSubModules.forEach(subModule => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>${subModule.name}:</strong> ${subModule.description}`;
+                    aiafModulesDetailsUl.appendChild(li);
+                });
+            }
+            
+            // Section Modules Clés
+            const modulesContainer = document.getElementById('module-details-container');
+            if (modulesContainer) {
+                projectData.keyModules.forEach(module => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <h3 class="card-title">${module.name}</h3>
+                        <p class="text-sm text-gray-700 mb-2"><strong>Responsabilité:</strong> ${module.responsibility}</p>
+                        <p class="text-sm text-gray-700"><strong>Algorithmes/Approches Clés:</strong> ${module.algorithms}</p>
+                        <p class="text-xs text-gray-500 mt-2"><i>Plan de développement détaillé: ${module.devPlanPrompt}</i></p>
+                    `;
+                    modulesContainer.appendChild(card);
+                });
+            }
+
+            // Section Processus Projet - Détails Timeline
+            const timelineDetailsDiv = document.getElementById('timeline-details');
+            if (timelineDetailsDiv) {
+                const ul = document.createElement('ul');
+                ul.className = 'list-disc list-inside text-gray-700 space-y-1 text-sm';
+                projectData.projectProcess.timelineDetails.forEach(detail => {
+                    const li = document.createElement('li');
+                    li.innerHTML = detail; // Using innerHTML because of <strong>
+                    ul.appendChild(li);
+                });
+                timelineDetailsDiv.appendChild(ul);
+            }
+
+            // Section Feuille de Route & Risques - Risques
+            const riskContainer = document.getElementById('risk-management-container');
+            if(riskContainer) {
+                projectData.roadmapAndRisks.risks.forEach(risk => {
+                    const riskDiv = document.createElement('div');
+                    riskDiv.className = 'p-3 bg-red-50 border border-red-200 rounded';
+                    riskDiv.innerHTML = `<h4 class="font-semibold text-red-800">${risk.name}</h4><p class="text-sm text-gray-600">${risk.mitigation}</p>`;
+                    riskContainer.appendChild(riskDiv);
+                });
+            }
+            
+            // Chart.js - Project Timeline
+            const timelineCtx = document.getElementById('projectTimelineChart');
+            if (timelineCtx) {
+                const timelineLabels = projectData.projectProcess.timeline.map(p => p.phase.split(':')[0]); // Shorter labels
+                const timelineDurations = projectData.projectProcess.timeline.map(p => p.duration);
+                const timelineColors = projectData.projectProcess.timeline.map(p => p.color);
+
+                new Chart(timelineCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: timelineLabels,
+                        datasets: [{
+                            label: 'Durée Estimée (semaines)',
+                            data: timelineDurations,
+                            backgroundColor: timelineColors,
+                            borderColor: timelineColors.map(c => c.replace('0.7', '1')),
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Semaines' }
+                            },
+                            y: {
+                                ticks: {
+                                    autoSkip: false,
+                                     callback: function(value, index, values) { // Wrap long labels
+                                        const label = this.getLabelForValue(value);
+                                        const maxLength = 16; 
+                                        if (label.length > maxLength) {
+                                            let lines = [];
+                                            let currentLine = '';
+                                            label.split(' ').forEach(word => {
+                                                if ((currentLine + word).length > maxLength) {
+                                                    lines.push(currentLine.trim());
+                                                    currentLine = '';
+                                                }
+                                                currentLine += word + ' ';
+                                            });
+                                            lines.push(currentLine.trim());
+                                            return lines;
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: true, text: 'Durées Estimées des Phases du Projet MVP' },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.x !== null) {
+                                            label += context.parsed.x + ' semaines';
+                                        }
+                                        return label;
+                                    },
+                                     title: function(context) {
+                                        // Get the full phase name for the tooltip title
+                                        return projectData.projectProcess.timeline[context[0].dataIndex].phase;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
